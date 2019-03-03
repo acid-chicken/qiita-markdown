@@ -153,4 +153,36 @@ describe Qiita::Markdown::Greenmat::HTMLToCRenderer do
       end
     end
   end
+
+  context "with escaped heading names" do
+    let(:markdown) do
+      <<-EOS.strip_heredoc
+        # a
+        <!--
+        ## b
+        ### c
+        -->
+        ### d
+      EOS
+    end
+
+    it "renders unescaped ToC anchors only" do
+      should eq <<-EOS.strip_heredoc
+        <ul>
+        <li>
+        <a href="#a">a</a>
+        <ul>
+        <li>
+        <ul>
+        <li>
+        <a href="#d">d</a>
+        </li>
+        </ul>
+        </li>
+        </ul>
+        </li>
+        </ul>
+      EOS
+    end
+  end
 end
